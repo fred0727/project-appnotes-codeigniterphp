@@ -56,16 +56,20 @@ class Users extends CI_Controller
 
             if ($this->form_validation->run()) {
                 $user = $this->UserModel->login($email);
-                if (password_verify($password, $user->pass)) {
-                    $datauser = array(
-                        'name'  => $user->name,
-                        'lastname'  => $user->lastname,
-                        'email'  => $user->email,
-                        'user_id' => $user->id,
-                    );
+                if ($user) {
+                    if (password_verify($password, $user->pass)) {
+                        $datauser = array(
+                            'name'  => $user->name,
+                            'lastname'  => $user->lastname,
+                            'email'  => $user->email,
+                            'user_id' => $user->id,
+                        );
 
-                    $this->session->set_userdata($datauser);
-                    redirect("users/home");
+                        $this->session->set_userdata($datauser);
+                        redirect("users/home");
+                    } else {
+                        $vinput["message"] = "Email o contraseña incorrectos";
+                    }
                 } else {
                     $vinput["message"] = "Email o contraseña incorrectos";
                 }
